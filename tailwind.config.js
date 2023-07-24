@@ -7,7 +7,10 @@ export default {
   theme: {
     extend: {
       height: {
-        '128' : '100vh - 40px'
+        '128' : '100vh - 40px',
+      },
+      backgroundColor:{
+        'antonio': 'green'
       }
     },
   },

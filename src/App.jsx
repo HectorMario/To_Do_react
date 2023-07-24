@@ -5,8 +5,7 @@ import { faTwitter, faFontAwesome } from '@fortawesome/free-brands-svg-icons'
 import Task from './components/task'
 import './App.css'
 import Button from './components/buttons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from './components/popupCreat/modal'
 library.add(fas, faTwitter, faFontAwesome)
 class button {
@@ -16,12 +15,6 @@ class button {
       this.quantity = quantity
   }
 };
-class tasks {
-  constructor (task, date){
-    this.task = task,
-    this.date = date
-  }
-}
 function App() {
   const [navBar, editnav] = useState([
     new button('Upcoming', "fa-solid fa-angles-right", 12),
@@ -29,11 +22,34 @@ function App() {
     new button('Calendar', "fa-solid fa-calendar-days"),
     new button('Sticky Wall', "fa-solid fa-note-sticky"),
   ]);
-  const [task, editTask] = useState([new tasks('prova', '14-05-2001')]);
+
+  const [task, editTask] = useState([]);
+  const [empty, setEmpty] = useState(false);
+
   function addTask(newTask){
     const prova = newTask;
+    // async
     editTask(prevTasks => [...prevTasks, prova]);
   }
+
+  function removeTask (index){
+    editTask(task.splice((index +1 ),1));
+    setEmpty(true);
+  }
+
+  useEffect(()=>{
+    const tasks = JSON.parse(localStorage.getItem('task'));
+    if (tasks) {
+     editTask(tasks);
+    }
+  }, []);
+
+  useEffect(()=>{
+    if (task.length > 0 || empty) {
+      localStorage.setItem('task', JSON.stringify(task));
+    }
+  }, [task]);
+  
   return (
     <div className='w-100 bg-indigo-800 h-screen flex justify-center items-center pe-20'>
       <div className="left w-1/3 flex justify-center">
@@ -80,12 +96,12 @@ function App() {
       </div>
       <div className="rounded-2xl w-2/3 h-[90vh] bg-white p-6">
         <div className="flex justify-between items-center">
-          <strong className='text-5xl'>Today {navBar[1].quantity}</strong>
+          <strong className='text-5xl'>Today</strong>
           <Modal addTask={addTask}></Modal>
         </div>
         <div className="container p-4 mt-9">
-          {task.map((task, key) => (
-          <Task task={task} key={key}></Task>
+          {task.map((task, index) => (
+          <Task task={task} index={index} key={index} removeTask={removeTask}></Task>
           ))}
         </div>
       </div>

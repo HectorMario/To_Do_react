@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 function Task(props) {
+  function removeTask(){
+    console.log(props);
+    props.removeTask(props.index);
+  }
   return (
     <div className="container">
       <div className="task flex justify-between cursor-pointer h-[60px] items-center px-9">
@@ -11,7 +15,7 @@ function Task(props) {
           <button className='rounded-lg hover:bg-amber-400 py-2 px-3'>
             <FontAwesomeIcon icon="fa-solid fa-pencil" />
           </button>
-          <button className='rounded-lg hover:bg-red-400 py-2 px-3'>
+          <button className='rounded-lg hover:bg-red-400 py-2 px-3' onClick={removeTask}>
             <FontAwesomeIcon icon="fa-solid fa-trash" />
           </button>
         </div>
