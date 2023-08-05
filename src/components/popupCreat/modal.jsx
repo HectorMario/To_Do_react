@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useContext} from "react";
 import "./modal.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { context } from "../../Store";
 export default function Modal(props) {
     let [nameTask, changeName] = useState('')
     let [dateTask, changeDate] = useState('')
+
 
     const [newTask, editTask] = useState({
         task: nameTask,
         date: dateTask
 
     })
-    const [modal, setModal] = useState(false);
+    const [modal, setModal] = useContext(context);
     const [control, setcontrol] = useState('bg-gray-500');
     const toggleModal = () => {
+        props.setElementEdit({});
         setModal(!modal);
     };
 
@@ -40,7 +43,7 @@ export default function Modal(props) {
         } else {
             setcontrol('bg-blue-500 hover:bg-blue-600')
         }
-    }, [dateTask, nameTask])
+    }, [dateTask, nameTask, props])
 
     function addTasks() {
         props.addTask(newTask);
@@ -64,13 +67,13 @@ export default function Modal(props) {
 
                             <div className="mb-6">
                                 <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">Task</label>
-                                <input onChange={setValues} type="text" id="name" name="name" placeholder="Go to the gym" className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300" />
+                                <input onChange={setValues} type="text" id="name" name="name" placeholder="Go to the gym" className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300" value={props.elementEdit.task}/>
                             </div>
                             <div className="mb-6">
                                 <label htmlFor="date" className="block text-gray-700 font-semibold mb-2">Date</label>
-                                <input onChange={setValues} type="date" id="date" name="date" className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300" />
+                                <input onChange={setValues} type="date" id="date" name="date" className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300" value={props.elementEdit.date}/>
                             </div>
-                            <button className={` w-full text-white font-bold py-2 px-4 rounded  focus:outline-none focus:ring focus:ring-opacity-50 ${control}`} onClick={addTasks} disabled={dateTask.length < 10 || nameTask.length < 4} >Add</button>
+                            <button className={` w-full text-white font-bold py-2 px-4 rounded  focus:outline-none focus:ring focus:ring-opacity-50 ${control}`} onClick={addTasks} disabled={dateTask.length < 10 || nameTask.length < 4}  >Add</button>
 
                         </div>
                         <button className="close-modal h-[32px] w-[32px] hover:bg-red-500 rounded-full" onClick={toggleModal}>

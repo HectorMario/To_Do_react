@@ -1,11 +1,12 @@
-import ReactDOM from 'react-dom'
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter, faFontAwesome } from '@fortawesome/free-brands-svg-icons'
 import Task from './components/task'
 import './App.css'
 import Button from './components/buttons'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext} from 'react'
+import { context } from './Store'
 import Modal from './components/popupCreat/modal'
 library.add(fas, faTwitter, faFontAwesome)
 class button {
@@ -16,6 +17,7 @@ class button {
   }
 };
 function App() {
+  const [modal, setModal] = useContext(context);
   const [navBar, editnav] = useState([
     new button('Upcoming', "fa-solid fa-angles-right", 12),
     new button('Today', "fa-solid fa-list-check", 5),
@@ -25,6 +27,7 @@ function App() {
 
   const [task, editTask] = useState([]);
   const [empty, setEmpty] = useState(false);
+  const [elementforEdit, setElementforEdit] = useState({});
 
   function addTask(newTask){
     const prova = newTask;
@@ -33,8 +36,16 @@ function App() {
   }
 
   function removeTask (index){
-    editTask(task.splice((index +1 ),1));
+    const deleteElement = [...task]
+    deleteElement.splice((index),1)
+    editTask(deleteElement);
     setEmpty(true);
+  }
+
+  function editTaskSingle(index){
+    const elementEdit =  task[index];
+    setModal(!modal);
+    setElementforEdit(elementEdit);
   }
 
   useEffect(()=>{
@@ -45,6 +56,7 @@ function App() {
   }, []);
 
   useEffect(()=>{
+    console.log(task)
     if (task.length > 0 || empty) {
       localStorage.setItem('task', JSON.stringify(task));
     }
@@ -97,11 +109,11 @@ function App() {
       <div className="rounded-2xl w-2/3 h-[90vh] bg-white p-6">
         <div className="flex justify-between items-center">
           <strong className='text-5xl'>Today</strong>
-          <Modal addTask={addTask}></Modal>
+          <Modal addTask={addTask} elementEdit={elementforEdit} setElementEdit={setElementforEdit}></Modal>
         </div>
         <div className="container p-4 mt-9">
           {task.map((task, index) => (
-          <Task task={task} index={index} key={index} removeTask={removeTask}></Task>
+          <Task task={task} index={index} key={index} removeTask={removeTask} editTask={editTaskSingle}></Task>
           ))}
         </div>
       </div>
