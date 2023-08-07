@@ -42,7 +42,15 @@ function App() {
     setEmpty(true);
   }
 
-  function editTaskSingle(index){
+  function editTaskSingle (element){
+    const clonArray = [...task];
+    let editElement = clonArray.find(element => element.task === elementforEdit.task && elementforEdit.date === elementforEdit.date);
+    editElement.task = element.task;
+    editElement.date = element.date
+    editTask(clonArray);
+  }
+
+  function openModal(index){
     const elementEdit =  task[index];
     setModal(!modal);
     setElementforEdit(elementEdit);
@@ -56,14 +64,15 @@ function App() {
   }, []);
 
   useEffect(()=>{
-    console.log(task)
     if (task.length > 0 || empty) {
       localStorage.setItem('task', JSON.stringify(task));
     }
   }, [task]);
+
+ 
   
   return (
-    <div className='w-100 bg-indigo-800 h-screen flex justify-center items-center pe-20'>
+    <div className='w-100 bg-black-400 h-screen flex justify-center items-center pe-20'>
       <div className="left w-1/3 flex justify-center">
         <div className="-mt-2 p-4 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0 ">
           <div className="rounded-2xl bg-gray-50 text-center ring-1 ring-inset ring-gray-900/5 flex-column items-center p-3 h-[90vh]">
@@ -106,14 +115,14 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="rounded-2xl w-2/3 h-[90vh] bg-white p-6">
+      <div className="rounded-2xl w-2/3 h-[90vh] bg-gray-50 p-6 ring-1 ring-inset ring-gray-900/5">
         <div className="flex justify-between items-center">
           <strong className='text-5xl'>Today</strong>
-          <Modal addTask={addTask} elementEdit={elementforEdit} setElementEdit={setElementforEdit}></Modal>
+          <Modal addTask={addTask} elementEdit={elementforEdit} setElementEdit={setElementforEdit} editTaskSingle={editTaskSingle}></Modal>
         </div>
         <div className="container p-4 mt-9">
           {task.map((task, index) => (
-          <Task task={task} index={index} key={index} removeTask={removeTask} editTask={editTaskSingle}></Task>
+          <Task task={task} index={index} key={index} removeTask={removeTask} editTask={openModal}></Task>
           ))}
         </div>
       </div>
