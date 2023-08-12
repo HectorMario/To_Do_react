@@ -116,11 +116,11 @@ function App() {
         </div>
       </div>
       <div className="rounded-2xl w-2/3 h-[90vh] bg-gray-50 p-6 ring-1 ring-inset ring-gray-900/5">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center ">
           <strong className='text-5xl'>Today</strong>
           <Modal addTask={addTask} elementEdit={elementforEdit} setElementEdit={setElementforEdit} editTaskSingle={editTaskSingle}></Modal>
         </div>
-        <div className="container p-4 mt-9">
+        <div className="container p-4 mt-9 h-[70vh] overflow-auto">
           {task.map((task, index) => (
           <Task task={task} index={index} key={index} removeTask={removeTask} editTask={openModal}></Task>
           ))}
